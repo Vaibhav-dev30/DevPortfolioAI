@@ -1,10 +1,10 @@
+import { Logo } from '../components/Logo.js';
 export function Landing() {
   return `
     <!-- Top Navigation -->
     <nav class="relative z-50 w-full px-lg py-md flex justify-between items-center max-w-container-max mx-auto reveal active">
       <div class="flex items-center gap-sm cursor-pointer">
-          <img src="/logo.png" alt="DevPortfolio Logo" class="w-10 h-10 rounded-md shadow-sm" />
-          <span class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">DevPortfolio<span class="text-primary">.ai</span></span>
+          ${Logo()}
       </div>
       <div class="hidden md:flex items-center gap-lg font-label-md text-label-md text-on-surface-variant">
           <a class="hover:text-primary transition-colors" href="#features">Features</a>
@@ -61,7 +61,7 @@ export function Landing() {
               </div>
               <div class="p-6 font-code-sm text-code-sm leading-relaxed text-on-surface-variant bg-surface-container-lowest overflow-hidden relative">
                   <pre class="m-0"><code class="language-typescript">
-<span class="text-secondary">import</span> { definePortfolio } <span class="text-secondary">from</span> <span class="text-primary">'@devportfolio/core'</span>;
+<span class="text-secondary">import</span> { definePortfolio } <span class="text-secondary">from</span> <span class="text-primary">'@gitfolio/core'</span>;
 
 <span class="text-secondary">export default</span> definePortfolio({
   <span class="text-tertiary">source</span>: {
@@ -373,8 +373,7 @@ export function Landing() {
     <footer class="relative z-10 w-full px-lg py-12 border-t border-outline-variant/30 bg-surface-container-lowest/30 backdrop-blur-sm">
         <div class="max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="flex items-center gap-sm">
-                <img src="/logo.png" alt="DevPortfolio Logo" class="w-8 h-8 rounded-md shadow-sm opacity-80" />
-                <span class="font-headline-md text-lg font-bold text-on-surface">DevPortfolio<span class="text-primary">.ai</span></span>
+                ${Logo()}
             </div>
             <div class="flex flex-wrap justify-center items-center gap-6 font-label-md text-sm text-on-surface-variant">
                 <a href="#" class="hover:text-primary transition-colors">Privacy Policy</a>
@@ -382,7 +381,7 @@ export function Landing() {
                 <a href="#" class="hover:text-primary transition-colors">Contact</a>
             </div>
             <div class="font-label-md text-sm text-outline">
-                &copy; 2026 DevPortfolio AI. All rights reserved.
+                &copy; 2026 GitFolio AI. All rights reserved.
             </div>
         </div>
     </footer>

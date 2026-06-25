@@ -5,7 +5,7 @@ export function ConnectGithubUI() {
         <div class="glass-panel border border-outline-variant/50 animate-entrance p-12 text-center rounded-xl col-span-full max-w-3xl mx-auto w-full">
             <span class="material-symbols-outlined text-primary text-[64px] mb-4 block">terminal</span>
             <h3 class="font-headline-md text-headline-md text-on-surface mb-4">Connect GitHub</h3>
-            <p class="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto mb-8">Authorize DevPortfolio AI to read your repositories by providing your GitHub username. We will automatically generate your portfolio and extract your skills.</p>
+            <p class="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto mb-8">Authorize GitFolio AI to read your repositories by providing your GitHub username. We will automatically generate your portfolio and extract your skills.</p>
             
             <form id="shared-github-connect-form" class="max-w-sm mx-auto flex flex-col gap-4">
                 <div id="shared-github-connect-err" class="hidden text-red-500 text-sm font-bold bg-red-500/10 p-2 rounded-lg border border-red-500/20"></div>

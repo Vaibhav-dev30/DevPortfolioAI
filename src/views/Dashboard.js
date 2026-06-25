@@ -1,3 +1,4 @@
+import { Logo } from '../components/Logo.js';
 import { TopNav } from '../components/TopNav.js';
 import { api } from '../services/api.js';
 import { ConnectGithubUI, initConnectGithub } from '../components/ConnectGithub.js';
@@ -9,8 +10,7 @@ export function Dashboard() {
       <!-- TopAppBar -->
       <header class="w-full sticky top-0 z-40 glass-panel flex justify-between items-center px-lg h-16 border-b border-outline-variant/30 animate-entrance">
           <div class="flex items-center gap-md text-primary font-bold min-w-max">
-              <img src="/logo.png" alt="DevPortfolio Logo" class="w-8 h-8 rounded-md shadow-sm" />
-              <span class="font-headline-md text-headline-md text-primary">DevPortfolio</span>
+              ${Logo()}
           </div>
           
           <div class="flex-1 flex justify-center">

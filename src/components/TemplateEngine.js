@@ -1,12 +1,20 @@
 export const PALETTES = [
-    // Dark Themes
+    // --- DARK THEMES ---
     { mode: 'dark', bg: 'bg-slate-950', card: 'bg-slate-900/50', border: 'border-slate-800', primary: 'text-cyan-400', secondary: 'text-slate-400', accent: 'cyan', textBody: 'text-slate-300', textHead: 'text-white' },
     { mode: 'dark', bg: 'bg-[#0f172a]', card: 'bg-[#1e293b]/60', border: 'border-[#334155]', primary: 'text-rose-400', secondary: 'text-slate-300', accent: 'rose', textBody: 'text-slate-300', textHead: 'text-white' },
     { mode: 'dark', bg: 'bg-[#000000]', card: 'bg-[#111111]/80', border: 'border-[#222222]', primary: 'text-emerald-400', secondary: 'text-gray-400', accent: 'emerald', textBody: 'text-gray-300', textHead: 'text-white' },
-    // Light Themes
+    { mode: 'dark', bg: 'bg-[#0a000f]', card: 'bg-[#16002a]/60', border: 'border-[#3b0764]', primary: 'text-violet-400', secondary: 'text-violet-300/60', accent: 'violet', textBody: 'text-violet-100/70', textHead: 'text-white' },
+    { mode: 'dark', bg: 'bg-[#020f06]', card: 'bg-[#0a2010]/70', border: 'border-[#14532d]', primary: 'text-green-400', secondary: 'text-green-300/60', accent: 'green', textBody: 'text-green-100/70', textHead: 'text-white' },
+    { mode: 'dark', bg: 'bg-[#00051a]', card: 'bg-[#001845]/60', border: 'border-[#1e3a8a]', primary: 'text-blue-400', secondary: 'text-blue-300/60', accent: 'blue', textBody: 'text-blue-100/70', textHead: 'text-white' },
+    { mode: 'dark', bg: 'bg-[#1a0f00]', card: 'bg-[#2d1a00]/60', border: 'border-[#78350f]', primary: 'text-amber-400', secondary: 'text-amber-300/60', accent: 'amber', textBody: 'text-amber-100/80', textHead: 'text-white' },
+    // --- LIGHT THEMES ---
     { mode: 'light', bg: 'bg-slate-50', card: 'bg-white/70', border: 'border-slate-200', primary: 'text-blue-600', secondary: 'text-slate-500', accent: 'blue', textBody: 'text-slate-700', textHead: 'text-slate-900' },
     { mode: 'light', bg: 'bg-[#fcfcfc]', card: 'bg-white/80', border: 'border-gray-200', primary: 'text-rose-500', secondary: 'text-gray-500', accent: 'rose', textBody: 'text-gray-700', textHead: 'text-gray-900' },
-    { mode: 'light', bg: 'bg-orange-50/50', card: 'bg-white/60', border: 'border-orange-200/50', primary: 'text-amber-600', secondary: 'text-orange-900/60', accent: 'amber', textBody: 'text-orange-900/80', textHead: 'text-orange-950' }
+    { mode: 'light', bg: 'bg-orange-50/50', card: 'bg-white/60', border: 'border-orange-200/50', primary: 'text-amber-600', secondary: 'text-orange-900/60', accent: 'amber', textBody: 'text-orange-900/80', textHead: 'text-orange-950' },
+    { mode: 'light', bg: 'bg-[#f5f3ff]', card: 'bg-white/70', border: 'border-violet-200', primary: 'text-violet-600', secondary: 'text-violet-400', accent: 'violet', textBody: 'text-violet-900/70', textHead: 'text-violet-950' },
+    { mode: 'light', bg: 'bg-[#f0fff4]', card: 'bg-white/70', border: 'border-green-200', primary: 'text-green-600', secondary: 'text-green-500/70', accent: 'green', textBody: 'text-green-900/70', textHead: 'text-green-950' },
+    { mode: 'light', bg: 'bg-[#eff6ff]', card: 'bg-white/70', border: 'border-blue-200', primary: 'text-indigo-600', secondary: 'text-indigo-400', accent: 'indigo', textBody: 'text-indigo-900/70', textHead: 'text-indigo-950' },
+    { mode: 'light', bg: 'bg-[#fff1f2]', card: 'bg-white/70', border: 'border-pink-200', primary: 'text-pink-600', secondary: 'text-pink-400', accent: 'pink', textBody: 'text-pink-900/70', textHead: 'text-pink-950' },
 ];
 
 export const FONTS = [
@@ -14,6 +22,7 @@ export const FONTS = [
     { sans: 'font-serif', header: 'font-serif tracking-tight' },
     { sans: 'font-mono', header: 'font-mono tracking-tight' }
 ];
+
 
 const INJECT_CSS = `
 <style>
@@ -386,7 +395,7 @@ export function generateTemplate(data, paletteIdx = 0, fontIdx = 0, layoutIdx = 
             <footer class="py-12 border-t ${p.border} text-center ${p.secondary} text-sm mt-auto relative z-10">
                 <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
                     <p>&copy; ${new Date().getFullYear()} ${templateData.name}. All rights reserved.</p>
-                    <p>Designed by DevPortfolio AI Engine.</p>
+                    <p>Designed by GitFolio AI Engine.</p>
                 </div>
             </footer>
         </div>

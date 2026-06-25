@@ -1,3 +1,4 @@
+import { Logo } from '../components/Logo.js';
 export function Auth(isLogin = true) {
     return `
       <style>
@@ -35,8 +36,8 @@ export function Auth(isLogin = true) {
              </div>
 
              <div class="w-full max-w-[420px] animate-entrance mx-auto pb-4">
-                <div class="text-left mb-6">
-                    <img src="/logo.png" alt="DevPortfolio Logo" class="w-12 h-12 rounded-2xl shadow-md border border-outline-variant/30 mb-4" />
+                <div class="text-center mb-6">
+                    <div class="flex justify-center mb-6 scale-125">${Logo()}</div>
                     <h1 class="font-display-lg text-4xl font-bold text-on-surface mb-3">${isLogin ? 'Welcome back' : 'Create account'}</h1>
                     <p class="font-body-lg text-on-surface-variant text-lg">
                        ${isLogin ? "Don't have an account?" : "Already have an account?"} 

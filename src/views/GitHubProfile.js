@@ -1,3 +1,4 @@
+import { Logo } from '../components/Logo.js';
 import { TopNav } from '../components/TopNav.js';
 import { api } from '../services/api.js';
 import { ConnectGithubUI, initConnectGithub } from '../components/ConnectGithub.js';
@@ -10,8 +11,7 @@ export function GitHubProfile() {
       <header class="relative flex justify-between items-center px-lg h-24 w-full sticky top-0 z-40 overflow-hidden bg-background/60 backdrop-blur-md border-b border-outline-variant/30">
           <div class="absolute inset-0 z-[-1] opacity-70" id="shader-container"></div>
           <div class="flex items-center gap-md relative z-10 min-w-max">
-              <img src="/logo.png" alt="DevPortfolio Logo" class="w-8 h-8 rounded-md shadow-sm" />
-              <span class="font-headline-md text-headline-md text-primary">DevPortfolio</span>
+              ${Logo()}
           </div>
           
           <div class="flex-1 flex justify-center relative z-10">

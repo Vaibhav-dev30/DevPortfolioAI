@@ -1,3 +1,4 @@
+import { Logo } from './Logo.js';
 export function Sidebar() {
     return `
       <!-- NavigationDrawer (Desktop/Mobile Toggleable) -->
@@ -6,7 +7,7 @@ export function Sidebar() {
               <span class="material-symbols-outlined">close</span>
           </button>
           <div class="mb-xl mt-2">
-              <span class="font-headline-lg text-headline-lg font-bold text-primary">DevPortfolio</span>
+              ${Logo()}
           </div>
           
           <div class="flex items-center gap-md mb-xl">

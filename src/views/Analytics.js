@@ -1,3 +1,4 @@
+import { Logo } from '../components/Logo.js';
 import './Analytics.css';
 import { api } from '../services/api';
 import { Button } from '../components/Button';

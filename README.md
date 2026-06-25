@@ -1,6 +1,6 @@
-# DevPortfolioAI
+# GitFolioAI
 
-DevPortfolioAI is a dynamic, modern web application designed for developers to create, manage, and preview their portfolios. Built with Vanilla JavaScript, HTML, and CSS, and powered by Vite, this application delivers a sleek, responsive user interface complete with interactive 3D WebGL backgrounds.
+GitFolioAI is a dynamic, modern web application designed for developers to create, manage, and preview their portfolios. Built with Vanilla JavaScript, HTML, and CSS, and powered by Vite, this application delivers a sleek, responsive user interface complete with interactive 3D WebGL backgrounds.
 
 ## Features
 
@@ -47,7 +47,7 @@ Follow these steps to set up the project locally:
 
 2. Navigate to the project directory:
    ```bash
-   cd DevPortfolioAI
+   cd GitFolioAI
    ```
 
 3. Install the dependencies:

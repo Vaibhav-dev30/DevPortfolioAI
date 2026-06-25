@@ -1,5 +1,7 @@
+import { Logo } from '../components/Logo.js';
 import { TopNav } from '../components/TopNav.js';
 import { api } from '../services/api.js';
+import { ai } from '../services/ai.js';
 import { ConnectGithubUI, initConnectGithub } from '../components/ConnectGithub.js';
 import { generateTemplate } from '../components/TemplateEngine.js';
 import { initDeployModal } from '../components/DeployModal.js';
@@ -16,8 +18,7 @@ export function PortfolioPreview() {
       <header class="relative flex justify-between items-center px-lg h-24 w-full sticky top-0 z-40 overflow-hidden bg-background/60 backdrop-blur-md border-b border-outline-variant/30">
           <div class="absolute inset-0 z-[-1] opacity-70" id="shader-container"></div>
           <div class="flex items-center gap-md relative z-10 min-w-max">
-              <img src="/logo.png" alt="DevPortfolio Logo" class="w-8 h-8 rounded-md shadow-sm" />
-              <span class="font-headline-md text-headline-md text-primary">DevPortfolio</span>
+              ${Logo()}
           </div>
           
           <div class="flex-1 flex justify-center relative z-10">
@@ -42,11 +43,14 @@ export function PortfolioPreview() {
                     <div class="w-3 h-3 rounded-full bg-[#10b981]"></div>
                 </div>
                 <div id="preview-url-bar" class="flex-1 text-center font-code-sm text-[12px] text-outline-variant bg-surface-variant/30 mx-4 py-1.5 rounded-md max-w-md truncate">
-                    loading.devportfolio.ai
+                    loading.gitfolio.ai
                 </div>
                 <div class="flex justify-end">
-                    <button id="btn-generate-look" class="bg-surface-container-high hover:bg-primary hover:text-on-primary text-on-surface-variant text-xs font-medium px-3 py-1.5 rounded transition-colors flex items-center gap-1 shadow-sm border border-outline-variant/30 hidden">
-                        <span class="material-symbols-outlined text-[14px] text-amber-500">auto_awesome</span> Generate New Look
+                    <button id="btn-generate-ai" class="bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 border border-indigo-500/30 px-3 py-1.5 rounded text-xs font-bold transition-colors flex items-center gap-1.5 whitespace-nowrap">
+                        <span class="material-symbols-outlined text-[14px]">smart_toy</span> AI Generation
+                    </button>
+                    <button id="btn-new-look" class="bg-surface-variant hover:bg-surface-container-highest border border-outline-variant px-3 py-1.5 rounded text-xs font-bold transition-colors flex items-center gap-1.5 whitespace-nowrap">
+                        <span class="material-symbols-outlined text-[14px]">magic_button</span> Engine Generation
                     </button>
                 </div>
             </div>
@@ -80,7 +84,7 @@ export async function initPreview() {
         const urlBar = document.getElementById('preview-url-bar');
         if (urlBar && user) {
             const sanitizedName = (user.name || user.github_username || 'dev').toLowerCase().replace(/[^a-z0-9]/g, '');
-            urlBar.innerText = `https://${sanitizedName}.devportfolio.ai`;
+            urlBar.innerText = `https://${sanitizedName}.gitfolio.ai`;
         }
 
         const previewContainer = document.getElementById('live-preview-content');
@@ -123,11 +127,9 @@ export async function initPreview() {
 
         renderTemplate();
 
-        // Setup the Generate New Look button
-        const btnNewLook = document.getElementById('btn-generate-look');
+        // Setup Engine Generation Button
+        const btnNewLook = document.getElementById('btn-new-look');
         if (btnNewLook) {
-            btnNewLook.classList.remove('hidden');
-            // Remove old listeners to prevent duplicates
             const newBtn = btnNewLook.cloneNode(true);
             btnNewLook.parentNode.replaceChild(newBtn, btnNewLook);
             
@@ -146,6 +148,92 @@ export async function initPreview() {
                 renderTemplate();
             });
         }
+
+        // Setup AI Generation Button
+        const btnAiGen = document.getElementById('btn-generate-ai');
+        if (btnAiGen) {
+            const newAiBtn = btnAiGen.cloneNode(true);
+            btnAiGen.parentNode.replaceChild(newAiBtn, btnAiGen);
+            
+            newAiBtn.addEventListener('click', async () => {
+                try {
+                    newAiBtn.innerHTML = '<span class="material-symbols-outlined text-[14px] animate-spin">refresh</span> Generating...';
+                    newAiBtn.disabled = true;
+
+                    previewContainer.innerHTML = `
+                        <div class="h-full w-full flex flex-col items-center justify-center">
+                            <div class="relative mb-8">
+                                <div class="w-20 h-20 border-[3px] border-indigo-500/20 border-t-indigo-400 rounded-full animate-spin"></div>
+                                <div class="w-14 h-14 border-[3px] border-purple-500/20 border-b-purple-400 rounded-full animate-spin absolute top-3 left-3" style="animation-direction:reverse;animation-duration:0.8s"></div>
+                            </div>
+                            <h2 class="text-2xl font-bold text-on-surface mb-2 tracking-tight">AI is working...</h2>
+                            <p class="text-on-surface-variant font-mono text-xs max-w-xs text-center leading-relaxed animate-pulse">Crafting layout · Styling animations · Writing components</p>
+                        </div>
+                    `;
+
+                    const [user, projects, github, skills] = await Promise.all([
+                        api.getUser(),
+                        api.getProjects(),
+                        api.getGithubData(),
+                        api.getSkills()
+                    ]);
+
+                    let displayProjects = projects && projects.length > 0 ? projects : [];
+                    if (displayProjects.length === 0 && github && github.repositories) {
+                        displayProjects = api.extractBestProjects(github);
+                    }
+
+                    const html = await ai.generatePortfolio({
+                        user,
+                        projects: displayProjects,
+                        githubData: github,
+                        skills
+                    });
+                    
+                    // Render AI HTML in an iframe so <style>/<script> work correctly
+                    previewContainer.innerHTML = '';
+                    previewContainer.style.overflow = 'hidden';
+                    const iframe = document.createElement('iframe');
+                    iframe.style.cssText = 'width:100%;height:100%;border:none;display:block;';
+                    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+                    previewContainer.appendChild(iframe);
+
+                    iframe.addEventListener('load', () => {
+                        try {
+                            const doc = iframe.contentDocument || iframe.contentWindow.document;
+                            // Force all reveal elements visible
+                            doc.querySelectorAll('.reveal').forEach((el, i) => {
+                                setTimeout(() => el.classList.add('visible'), i * 60);
+                            });
+                            // Expand iframe to full content height so previewContainer scrolls it
+                            const expand = () => {
+                                const h = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight, 600);
+                                iframe.style.height = h + 'px';
+                                previewContainer.style.overflow = 'auto';
+                            };
+                            // Measure after animations settle
+                            setTimeout(expand, 800);
+                        } catch (e) {
+                            iframe.style.height = '3000px';
+                            previewContainer.style.overflow = 'auto';
+                        }
+                    });
+
+                    await new Promise(r => setTimeout(r, 50));
+                    iframe.srcdoc = html;
+
+                } catch (err) {
+                    console.error('AI Generation failed', err);
+                    alert(err.message || 'Failed to generate via AI.');
+                    previewContainer.style.overflow = '';
+                    renderTemplate(); // fallback to engine
+                } finally {
+                    newAiBtn.innerHTML = '<span class="material-symbols-outlined text-[14px]">smart_toy</span> AI Generation';
+                    newAiBtn.disabled = false;
+                }
+            });
+        }
+
 
         // Setup Deploy Modal
         initDeployModal(() => previewContainer.innerHTML);

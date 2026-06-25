@@ -1,3 +1,4 @@
+import { Logo } from '../components/Logo.js';
 import { TopNav } from '../components/TopNav.js';
 import { api } from '../services/api.js';
 
@@ -9,8 +10,7 @@ export function Settings() {
       <header class="relative flex justify-between items-center px-lg h-24 w-full sticky top-0 z-40 overflow-hidden bg-background/60 backdrop-blur-md border-b border-outline-variant/30">
           <div class="absolute inset-0 z-[-1] opacity-70" id="shader-container"></div>
           <div class="flex items-center gap-md relative z-10 min-w-max">
-              <img src="/logo.png" alt="DevPortfolio Logo" class="w-8 h-8 rounded-md shadow-sm" />
-              <span class="font-headline-md text-headline-md text-primary">DevPortfolio</span>
+              ${Logo()}
           </div>
           
           <div class="flex-1 flex justify-center relative z-10">
@@ -46,7 +46,7 @@ export function Settings() {
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="flex flex-col gap-2">
                         <label class="font-label-md text-xs font-bold text-on-surface uppercase tracking-wider">GitHub Username</label>
-                        <input id="prof-github" type="text" class="w-full bg-surface border border-outline-variant/60 rounded-xl px-4 py-2.5 font-body-md text-sm text-on-surface focus:outline-none focus:border-primary transition-all shadow-sm" placeholder="Vaibhav-dev30" />
+                        <input id="prof-github" type="text" class="w-full bg-surface border border-outline-variant/60 rounded-xl px-4 py-2.5 font-body-md text-sm text-on-surface focus:outline-none focus:border-primary transition-all shadow-sm" placeholder="your-username" />
                     </div>
                     <div class="flex flex-col gap-2">
                         <label class="font-label-md text-xs font-bold text-on-surface uppercase tracking-wider">Location</label>
@@ -78,19 +78,21 @@ export function Settings() {
             </form>
         </div>
 
-        <div class="glass-panel border border-outline-variant/50 animate-entrance delay-200 p-8 rounded-xl max-w-3xl mx-auto w-full opacity-60 pointer-events-none">
-            <h3 class="font-headline-md text-headline-md text-on-surface mb-6 border-b border-outline-variant/50 pb-2">General Settings (Coming Soon)</h3>
+        <div class="glass-panel border border-outline-variant/50 animate-entrance delay-200 p-8 rounded-xl max-w-3xl mx-auto w-full">
+            <h3 class="font-headline-md text-headline-md text-on-surface mb-6 border-b border-outline-variant/50 pb-2 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">smart_toy</span> AI Engine Configuration
+            </h3>
             
             <div class="flex flex-col gap-6">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <div class="font-label-md text-label-md text-on-surface font-bold">Theme Preference</div>
-                        <div class="font-body-md text-[13px] text-on-surface-variant mt-1">Choose how DevPortfolio AI looks to you</div>
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="flex-1">
+                        <div class="font-label-md text-label-md text-on-surface font-bold">GitHub Token (AI Generation)</div>
+                        <div class="font-body-md text-[13px] text-on-surface-variant mt-1 max-w-md">Use your GitHub personal access token to power AI portfolio generation via <strong>GitHub Models (GPT-4o-mini)</strong>. Create one at <a href="https://github.com/settings/tokens" target="_blank" class="text-primary hover:underline">github.com/settings/tokens</a>. Stored locally only.</div>
                     </div>
-                    <select class="bg-surface-container-lowest border border-outline-variant/50 rounded-lg px-4 py-2 font-body-md text-sm focus:outline-none focus:border-primary">
-                        <option>System Default</option>
-                        <option selected>Aurelian Edition v2 (Light)</option>
-                    </select>
+                    <div class="flex-1 w-full md:w-auto flex gap-2">
+                        <input id="settings-grok-key" type="password" class="w-full bg-surface border border-outline-variant/60 rounded-xl px-4 py-2 font-body-md text-sm text-on-surface focus:outline-none focus:border-primary transition-all shadow-sm" placeholder="ghp_..." />
+                        <button id="btn-save-key" class="bg-surface-variant hover:bg-surface-container-highest border border-outline-variant/60 text-on-surface font-label-md text-sm px-4 py-2 rounded-xl transition-colors shadow-sm">Save</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -115,6 +117,12 @@ export async function initSettings() {
             document.getElementById('prof-linkedin').value = user.linkedin_url || '';
         }
         
+        // Load API Key
+        const savedKey = localStorage.getItem('github_ai_key');
+        if (savedKey) {
+            document.getElementById('settings-grok-key').value = savedKey;
+        }
+
         // Handle Form Submission
         const form = document.getElementById('profile-form');
         const errBox = document.getElementById('settings-error');
@@ -143,12 +151,27 @@ export async function initSettings() {
                 successBox.innerText = "Profile updated successfully!";
                 successBox.classList.remove('hidden');
             } catch (err) {
-                errBox.innerText = err.message || "Failed to update profile";
+                console.error(err);
+                errBox.innerText = err.message || "Failed to update profile.";
                 errBox.classList.remove('hidden');
             } finally {
                 saveBtn.innerHTML = 'Save Profile';
                 saveBtn.disabled = false;
+                setTimeout(() => { successBox.classList.add('hidden'); errBox.classList.add('hidden'); }, 3000);
             }
+        });
+
+        // Handle API Key Save
+        document.getElementById('btn-save-key').addEventListener('click', (e) => {
+            const btn = e.target;
+            const key = document.getElementById('settings-grok-key').value.trim();
+            localStorage.setItem('github_ai_key', key);
+            btn.innerHTML = 'Saved!';
+            btn.classList.add('bg-green-500/20', 'text-green-600', 'border-green-500/50');
+            setTimeout(() => {
+                btn.innerHTML = 'Save';
+                btn.classList.remove('bg-green-500/20', 'text-green-600', 'border-green-500/50');
+            }, 2000);
         });
 
         // Handle Logout
