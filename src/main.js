@@ -1,11 +1,11 @@
 import { Landing, initLanding } from './views/Landing.js';
-import { Dashboard } from './views/Dashboard.js';
-import { Projects } from './views/Projects.js';
-import { Skills } from './views/Skills.js';
-import { GitHubProfile } from './views/GitHubProfile.js';
-import { PortfolioPreview } from './views/PortfolioPreview.js';
-import { Settings } from './views/Settings.js';
-import { Auth } from './views/Auth.js';
+import { Dashboard, initDashboard } from './views/Dashboard.js';
+import { Projects, initProjects } from './views/Projects.js';
+import { Skills, initSkills } from './views/Skills.js';
+import { GitHubProfile, initGitHub } from './views/GitHubProfile.js';
+import { PortfolioPreview, initPreview } from './views/PortfolioPreview.js';
+import { Settings, initSettings } from './views/Settings.js';
+import { Auth, initAuthLogic } from './views/Auth.js';
 import { initGLSLBackground } from './utils/shader.js';
 import { initRingsBackground } from './utils/rings.js';
 import { initAuth3D } from './utils/auth3d.js';
@@ -104,37 +104,23 @@ async function router() {
                    if(shaderCanvas) shaderCanvas.style.opacity = '0';
                    if(ringsBg) ringsBg.style.opacity = '0';
                    initAuth3D();
-                   import('./views/Auth.js').then(module => {
-                       module.initAuthLogic(path === '/login');
-                   });
+                   initAuthLogic(path === '/login');
                 } else {
                    if(shaderCanvas) shaderCanvas.style.opacity = '1'; // Enable shader for warm vibe
                    if(ringsBg) ringsBg.style.opacity = '0.5';
 
                    if (path === '/dashboard') {
-                       import('./views/Dashboard.js').then(module => {
-                           if (module.initDashboard) module.initDashboard();
-                       });
+                       if (initDashboard) initDashboard();
                    } else if (path === '/settings') {
-                       import('./views/Settings.js').then(module => {
-                           if (module.initSettings) module.initSettings();
-                       });
+                       if (initSettings) initSettings();
                    } else if (path === '/projects') {
-                       import('./views/Projects.js').then(module => {
-                           if (module.initProjects) module.initProjects();
-                       });
+                       if (initProjects) initProjects();
                    } else if (path === '/github') {
-                       import('./views/GitHubProfile.js').then(module => {
-                           if (module.initGitHub) module.initGitHub();
-                       });
+                       if (initGitHub) initGitHub();
                    } else if (path === '/preview') {
-                       import('./views/PortfolioPreview.js').then(module => {
-                           if (module.initPreview) module.initPreview();
-                       });
+                       if (initPreview) initPreview();
                    } else if (path === '/skills') {
-                       import('./views/Skills.js').then(module => {
-                           if (module.initSkills) module.initSkills();
-                       });
+                       if (initSkills) initSkills();
                    }
                 }
                 

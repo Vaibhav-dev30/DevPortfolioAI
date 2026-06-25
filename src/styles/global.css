@@ -1,7 +1,4 @@
 /* Global CSS overrides mapping exactly to Stitch raw styles */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 /* Glassmorphism utilities */
 .glass-panel {
