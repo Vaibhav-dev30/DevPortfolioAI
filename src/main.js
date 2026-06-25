@@ -104,6 +104,9 @@ async function router() {
                    if(shaderCanvas) shaderCanvas.style.opacity = '0';
                    if(ringsBg) ringsBg.style.opacity = '0';
                    initAuth3D();
+                   import('./views/Auth.js').then(module => {
+                       module.initAuthLogic(path === '/login');
+                   });
                 } else {
                    // Dashboard or other pages
                    if(shaderCanvas) shaderCanvas.style.opacity = '1'; // Enable shader for warm vibe

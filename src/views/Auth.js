@@ -62,7 +62,8 @@ export function Auth(isLogin = true) {
                     <span class="relative bg-surface-container-lowest px-4 font-label-md text-xs text-on-surface-variant font-bold uppercase tracking-widest">Or continue with email</span>
                 </div>
 
-                <form class="flex flex-col gap-4" onsubmit="event.preventDefault(); const btn = document.getElementById('auth-submit-wrapper'); btn.style.animation = 'buttonEscape 1.2s cubic-bezier(0.5, 0, 0.2, 1) forwards'; setTimeout(() => window.location.hash='#/dashboard', 1100);">
+                <form id="auth-form" class="flex flex-col gap-4">
+                    <div id="auth-error" class="hidden text-red-500 text-sm font-bold bg-red-500/10 p-3 rounded-lg border border-red-500/20"></div>
                     ${!isLogin ? `
                     <div class="flex flex-col gap-1.5">
                         <label class="font-label-md text-xs font-bold text-on-surface uppercase tracking-wider">Full Name</label>
@@ -72,7 +73,7 @@ export function Auth(isLogin = true) {
                     
                     <div class="flex flex-col gap-1.5">
                         <label class="font-label-md text-xs font-bold text-on-surface uppercase tracking-wider">Email Address</label>
-                        <input type="email" class="w-full bg-surface border border-outline-variant/60 rounded-xl px-4 py-2.5 font-body-md text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all shadow-sm placeholder:text-on-surface-variant/40" placeholder="you@company.com" required />
+                        <input id="auth-email" type="email" class="w-full bg-surface border border-outline-variant/60 rounded-xl px-4 py-2.5 font-body-md text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all shadow-sm placeholder:text-on-surface-variant/40" placeholder="you@company.com" required />
                     </div>
 
                     <div class="flex flex-col gap-1.5 relative">
@@ -80,7 +81,7 @@ export function Auth(isLogin = true) {
                             <label class="font-label-md text-xs font-bold text-on-surface uppercase tracking-wider">Password</label>
                             ${isLogin ? '<a href="#" class="font-label-md text-xs text-primary hover:underline hover:text-primary/80 transition-colors">Forgot?</a>' : ''}
                         </div>
-                        <input type="password" class="w-full bg-surface border border-outline-variant/60 rounded-xl px-4 py-2.5 font-body-md text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all shadow-sm placeholder:text-on-surface-variant/40" placeholder="••••••••" required />
+                        <input id="auth-password" type="password" class="w-full bg-surface border border-outline-variant/60 rounded-xl px-4 py-2.5 font-body-md text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all shadow-sm placeholder:text-on-surface-variant/40" placeholder="••••••••" required />
                     </div>
 
                     <!-- Unique Premium Button with CSS glow -->
@@ -98,4 +99,48 @@ export function Auth(isLogin = true) {
          </div>
       </div>
     `;
+}
+
+import { supabase } from '../services/supabase.js';
+
+export function initAuthLogic(isLogin) {
+    const form = document.getElementById('auth-form');
+    const errorBox = document.getElementById('auth-error');
+    const emailInput = document.getElementById('auth-email');
+    const passwordInput = document.getElementById('auth-password');
+    const btnWrapper = document.getElementById('auth-submit-wrapper');
+
+    if (!form) return;
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorBox.classList.add('hidden');
+        errorBox.innerText = '';
+
+        const email = emailInput.value;
+        const password = passwordInput.value;
+
+        try {
+            let result;
+            if (isLogin) {
+                result = await supabase.auth.signInWithPassword({ email, password });
+            } else {
+                result = await supabase.auth.signUp({ email, password });
+            }
+
+            if (result.error) throw result.error;
+
+            // Success animation and redirect
+            if (btnWrapper) {
+                btnWrapper.style.animation = 'buttonEscape 1.2s cubic-bezier(0.5, 0, 0.2, 1) forwards';
+            }
+            setTimeout(() => {
+                window.location.hash = '#/dashboard';
+            }, 1100);
+
+        } catch (err) {
+            errorBox.innerText = err.message || 'Authentication failed.';
+            errorBox.classList.remove('hidden');
+        }
+    });
 }
