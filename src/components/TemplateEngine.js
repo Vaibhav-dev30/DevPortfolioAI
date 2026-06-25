@@ -347,6 +347,166 @@ function renderLayout2(p, f, data, displaySkills, displayProjects) {
     `;
 }
 
+// Layout 3: Magazine Editorial
+function renderLayout3(p, f, data, displaySkills, displayProjects) {
+    return `
+        <div class="max-w-5xl mx-auto px-6 py-16 relative z-10">
+            <header class="border-b ${p.border} pb-12 mb-16 animate-stagger-1">
+                <div class="flex flex-col md:flex-row items-start gap-10">
+                    <img src="${data.avatar}" class="w-28 h-28 object-cover rounded-3xl shadow-2xl border-4 ${p.border} shrink-0" alt="${data.name}" />
+                    <div class="flex-1">
+                        <p class="text-xs tracking-[0.3em] uppercase font-bold ${p.primary} mb-3">Portfolio — ${new Date().getFullYear()}</p>
+                        <h1 class="text-5xl md:text-6xl font-bold font-syne ${p.textHead} leading-tight mb-3">${data.name}</h1>
+                        <h2 class="text-xl ${p.primary} font-space font-medium mb-4">${data.role}</h2>
+                        <p class="${p.secondary} leading-relaxed max-w-xl text-base">${data.bio}</p>
+                        <div class="flex items-center gap-3 mt-5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span class="text-sm font-medium ${p.secondary}">Available · ${data.location}</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            ${displaySkills.length > 0 ? `
+            <section class="mb-16 animate-stagger-2">
+                <p class="text-xs tracking-[0.3em] uppercase font-bold ${p.secondary} mb-6">Stack</p>
+                <div class="flex flex-wrap gap-2">
+                    ${displaySkills.map(s => `<span class="px-4 py-1.5 rounded-full ${p.card} border ${p.border} text-sm font-medium ${p.textBody} hover:${p.primary} hover:border-${p.accent}-400 transition-colors cursor-default">${s}</span>`).join('')}
+                </div>
+            </section>` : ''}
+            <section class="mb-16 animate-stagger-3">
+                <p class="text-xs tracking-[0.3em] uppercase font-bold ${p.secondary} mb-8">Selected Work</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    ${displayProjects.map((proj, i) => `
+                        <div class="${p.card} border ${p.border} rounded-2xl p-6 hover-lift hover:border-${p.accent}-400/60 flex flex-col ${i === 0 ? 'md:col-span-2' : ''}">
+                            <h4 class="text-lg font-space font-bold ${p.textHead} mb-2">${proj.title}</h4>
+                            <p class="${p.secondary} text-sm leading-relaxed mb-4 flex-1">${proj.description || ''}</p>
+                            <div class="flex flex-wrap gap-1.5 mb-4">
+                                ${proj.tags ? (Array.isArray(proj.tags) ? proj.tags : proj.tags.split(',')).slice(0,3).map(t => `<span class="text-xs px-2 py-0.5 rounded bg-${p.accent}-500/10 ${p.primary} font-medium">${t.trim()}</span>`).join('') : ''}
+                            </div>
+                            <div class="flex gap-3 pt-4 border-t ${p.border}">
+                                ${proj.live_url ? `<a href="${proj.live_url}" target="_blank" class="text-sm font-semibold ${p.primary} hover:underline">Live ↗</a>` : ''}
+                                ${proj.github_url ? `<a href="${proj.github_url}" target="_blank" class="text-sm font-semibold ${p.secondary} hover:${p.textHead} transition">Code</a>` : ''}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </section>
+            <section class="animate-stagger-4">${renderContactSection(p, data)}</section>
+        </div>
+    `;
+}
+
+// Layout 4: Terminal / Code Aesthetic
+function renderLayout4(p, f, data, displaySkills, displayProjects) {
+    return `
+        <div class="max-w-4xl mx-auto px-6 py-16 relative z-10 font-mono">
+            <div class="${p.card} border ${p.border} rounded-2xl p-8 mb-10 animate-stagger-1 shadow-xl">
+                <div class="flex items-center gap-2 mb-6">
+                    <span class="w-3 h-3 rounded-full bg-red-500"></span>
+                    <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                    <span class="w-3 h-3 rounded-full bg-green-500"></span>
+                    <span class="ml-4 text-xs ${p.secondary} tracking-wider">~/portfolio</span>
+                </div>
+                <p class="text-xs ${p.secondary} mb-4">$ whoami</p>
+                <div class="flex items-center gap-6 mb-6">
+                    <img src="${data.avatar}" class="w-20 h-20 rounded-xl border ${p.border} object-cover" alt="${data.name}" />
+                    <div>
+                        <h1 class="text-3xl font-bold ${p.textHead} tracking-tight">${data.name}</h1>
+                        <h2 class="${p.primary} mt-1">${data.role}</h2>
+                        <p class="${p.secondary} text-sm mt-1">Based in ${data.location}</p>
+                    </div>
+                </div>
+                <p class="text-xs ${p.secondary} mb-2">$ cat about.txt</p>
+                <p class="${p.textBody} text-sm leading-relaxed pl-4 border-l-2 border-${p.accent}-500">${data.bio}</p>
+            </div>
+            ${displaySkills.length > 0 ? `
+            <div class="${p.card} border ${p.border} rounded-2xl p-6 mb-10 animate-stagger-2 shadow-lg">
+                <p class="text-xs ${p.secondary} mb-4">$ cat skills.json</p>
+                <div class="flex flex-wrap gap-2 pl-2">
+                    ${displaySkills.map(s => `<span class="text-xs px-3 py-1 rounded-md bg-${p.accent}-500/10 ${p.primary} border ${p.border}">"${s}"</span>`).join('')}
+                </div>
+            </div>` : ''}
+            <div class="animate-stagger-3">
+                <p class="text-xs ${p.secondary} mb-4">$ ls ./projects/</p>
+                <div class="flex flex-col gap-4">
+                    ${displayProjects.map((proj, i) => `
+                        <div class="${p.card} border ${p.border} rounded-xl p-6 hover-lift hover:border-${p.accent}-400/50 group">
+                            <div class="flex items-start justify-between gap-4 flex-wrap">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-xs ${p.secondary}">[${String(i+1).padStart(2,'0')}]</span>
+                                        <h4 class="font-bold ${p.textHead}">${proj.title}/</h4>
+                                    </div>
+                                    <p class="${p.secondary} text-sm leading-relaxed mb-3">${proj.description || ''}</p>
+                                    <div class="flex flex-wrap gap-2">
+                                        ${proj.tags ? (Array.isArray(proj.tags) ? proj.tags : proj.tags.split(',')).slice(0,4).map(t => `<span class="text-xs ${p.primary}">#${t.trim().replace(/ /g,'_')}</span>`).join('') : ''}
+                                    </div>
+                                </div>
+                                <div class="flex gap-3 shrink-0">
+                                    ${proj.live_url ? `<a href="${proj.live_url}" target="_blank" class="text-xs px-3 py-1.5 border ${p.border} rounded ${p.primary} hover:bg-${p.accent}-500/10 transition">open↗</a>` : ''}
+                                    ${proj.github_url ? `<a href="${proj.github_url}" target="_blank" class="text-xs px-3 py-1.5 border ${p.border} rounded ${p.secondary} hover:${p.textHead} transition">git</a>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            <div class="mt-12 animate-stagger-4">${renderContactSection(p, data)}</div>
+        </div>
+    `;
+}
+
+// Layout 5: Minimal Gradient Hero
+function renderLayout5(p, f, data, displaySkills, displayProjects) {
+    return `
+        <div class="relative z-10">
+            <header class="min-h-[55vh] flex items-center justify-center text-center px-6 py-20 animate-stagger-1 relative overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-${p.accent}-500/10 via-transparent to-${p.accent}-600/5 pointer-events-none"></div>
+                <div class="relative z-10 max-w-3xl">
+                    <img src="${data.avatar}" class="w-24 h-24 rounded-full object-cover mx-auto mb-6 border-4 ${p.border} shadow-2xl" alt="${data.name}" />
+                    <h1 class="text-6xl md:text-8xl font-bold font-syne ${p.textHead} leading-none tracking-tight mb-4">${data.name}</h1>
+                    <p class="text-2xl ${p.primary} font-medium mb-6">${data.role}</p>
+                    <p class="text-lg ${p.secondary} max-w-xl mx-auto leading-relaxed mb-8">${data.bio}</p>
+                    <div class="flex justify-center gap-3 flex-wrap">
+                        ${data.email ? `<a href="mailto:${data.email}" class="px-6 py-2.5 bg-${p.accent}-500 hover:bg-${p.accent}-600 text-white rounded-full text-sm font-semibold transition-colors shadow-lg">Email Me</a>` : ''}
+                        ${data.githubData?.username ? `<a href="https://github.com/${data.githubData.username}" target="_blank" class="px-6 py-2.5 border ${p.border} ${p.textHead} rounded-full text-sm font-semibold hover:bg-${p.accent}-500/10 transition-colors">GitHub</a>` : ''}
+                    </div>
+                </div>
+            </header>
+            <div class="max-w-4xl mx-auto px-6 pb-20">
+                ${displaySkills.length > 0 ? `
+                <section class="py-10 border-y ${p.border} mb-16 animate-stagger-2">
+                    <div class="flex flex-wrap justify-center gap-4">
+                        ${displaySkills.map(s => `<span class="text-sm font-medium ${p.secondary} hover:${p.primary} transition-colors cursor-default">${s}</span>`).join('<span class="opacity-20">·</span>')}
+                    </div>
+                </section>` : ''}
+                <section class="mb-16 animate-stagger-3">
+                    <h3 class="text-xs font-bold tracking-[0.25em] uppercase ${p.secondary} mb-10">Selected Projects</h3>
+                    <div class="flex flex-col">
+                        ${displayProjects.map((proj, i) => `
+                            <div class="py-8 border-b ${p.border} flex flex-col md:flex-row md:items-center gap-6 group hover:bg-${p.accent}-500/5 px-4 rounded-xl transition-colors -mx-4">
+                                <span class="text-5xl font-bold font-syne ${p.primary} opacity-25 shrink-0 w-16">${String(i+1).padStart(2,'0')}</span>
+                                <div class="flex-1">
+                                    <h4 class="text-2xl font-bold font-syne ${p.textHead} mb-2">${proj.title}</h4>
+                                    <p class="${p.secondary} text-sm leading-relaxed">${proj.description || ''}</p>
+                                    <div class="flex flex-wrap gap-2 mt-3">
+                                        ${proj.tags ? (Array.isArray(proj.tags) ? proj.tags : proj.tags.split(',')).slice(0,4).map(t => `<span class="text-xs ${p.primary} font-medium">${t.trim()}</span>`).join(' · ') : ''}
+                                    </div>
+                                </div>
+                                <div class="flex gap-3 shrink-0">
+                                    ${proj.live_url ? `<a href="${proj.live_url}" target="_blank" class="px-4 py-2 bg-${p.accent}-500 text-white rounded-lg text-sm font-semibold hover:bg-${p.accent}-600 transition-colors">Live ↗</a>` : ''}
+                                    ${proj.github_url ? `<a href="${proj.github_url}" target="_blank" class="px-4 py-2 border ${p.border} ${p.textHead} rounded-lg text-sm font-semibold hover:bg-${p.accent}-500/10 transition-colors">Code</a>` : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+                <section class="animate-stagger-4">${renderContactSection(p, data)}</section>
+            </div>
+        </div>
+    `;
+}
+
 export function generateTemplate(data, paletteIdx = 0, fontIdx = 0, layoutIdx = 0) {
     const p = PALETTES[paletteIdx % PALETTES.length];
     const f = FONTS[fontIdx % FONTS.length];
@@ -381,7 +541,10 @@ export function generateTemplate(data, paletteIdx = 0, fontIdx = 0, layoutIdx = 
     let layoutHtml = '';
     if (layoutIdx === 0) layoutHtml = renderLayout0(p, f, templateData, displaySkills, displayProjects);
     else if (layoutIdx === 1) layoutHtml = renderLayout1(p, f, templateData, displaySkills, displayProjects);
-    else layoutHtml = renderLayout2(p, f, templateData, displaySkills, displayProjects);
+    else if (layoutIdx === 2) layoutHtml = renderLayout2(p, f, templateData, displaySkills, displayProjects);
+    else if (layoutIdx === 3) layoutHtml = renderLayout3(p, f, templateData, displaySkills, displayProjects);
+    else if (layoutIdx === 4) layoutHtml = renderLayout4(p, f, templateData, displaySkills, displayProjects);
+    else layoutHtml = renderLayout5(p, f, templateData, displaySkills, displayProjects);
 
     return `
         ${INJECT_CSS}

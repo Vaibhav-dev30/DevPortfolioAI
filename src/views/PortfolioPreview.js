@@ -137,13 +137,13 @@ export async function initPreview() {
                 // Randomize palette, font, and layout
                 const oldPalette = currentPaletteIdx;
                 while (currentPaletteIdx === oldPalette) {
-                    currentPaletteIdx = Math.floor(Math.random() * 6); // 6 palettes (3 dark, 3 light)
+                    currentPaletteIdx = Math.floor(Math.random() * 14); // 14 palettes
                 }
-                currentFontIdx = Math.floor(Math.random() * 3); // 3 fonts
+                currentFontIdx = Math.floor(Math.random() * 3);
                 
                 const oldLayout = currentLayoutIdx;
                 while (currentLayoutIdx === oldLayout) {
-                    currentLayoutIdx = Math.floor(Math.random() * 3); // 3 layouts
+                    currentLayoutIdx = Math.floor(Math.random() * 6); // 6 layouts
                 }
                 renderTemplate();
             });
