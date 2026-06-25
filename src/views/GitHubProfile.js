@@ -65,6 +65,9 @@ export async function initGitHub() {
             linkEl.href = `https://github.com/${github.username}`;
         }
 
+        const grid = document.getElementById('github-repos-grid');
+        if (!grid) return;
+
         if (github.isNotConnected) {
             grid.classList.remove('grid', 'grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3');
             grid.innerHTML = ConnectGithubUI();
@@ -136,5 +139,9 @@ export async function initGitHub() {
 
     } catch (e) {
         console.error("Failed to render GitHub view", e);
+        const grid = document.getElementById('github-repos-grid');
+        if (grid) {
+            grid.innerHTML = \`<div class="col-span-full py-12 text-center text-red-500 bg-red-500/10 border border-red-500/30 rounded-xl">Error: \${e.message}</div>\`;
+        }
     }
 }

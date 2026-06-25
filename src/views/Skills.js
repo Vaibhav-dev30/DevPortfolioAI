@@ -130,5 +130,9 @@ export async function initSkills() {
 
     } catch (e) {
         console.error("Failed to render skills view", e);
+        const container = document.getElementById('skills-container');
+        if (container) {
+            container.innerHTML = \`<div class="col-span-full py-12 text-center text-red-500 bg-red-500/10 border border-red-500/30 rounded-xl">Error: \${e.message}</div>\`;
+        }
     }
 }
