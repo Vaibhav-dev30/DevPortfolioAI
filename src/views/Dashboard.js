@@ -1,5 +1,6 @@
 import { TopNav } from '../components/TopNav.js';
 import { api } from '../services/api.js';
+import { ConnectGithubUI, initConnectGithub } from '../components/ConnectGithub.js';
 
 export function Dashboard() {
   return `
@@ -65,7 +66,7 @@ export function Dashboard() {
           </section>
           
           <!-- Main Content Grid -->
-          <section class="grid grid-cols-1 lg:grid-cols-3 gap-md h-full relative z-10">
+          <section id="dash-bottom-section" class="grid grid-cols-1 lg:grid-cols-3 gap-md h-full relative z-10">
               <!-- Left Column: Activity & Focus -->
               <div class="lg:col-span-2 flex flex-col gap-md">
                   <div class="glass-panel interactive-glow rounded-xl p-lg flex-1 animate-entrance delay-200">
@@ -123,11 +124,14 @@ export async function initDashboard() {
         // Populate Stats
         document.getElementById('dash-total-projects').innerText = projects.length || 0;
         
+        // Skills Count dynamically derived from GitHub repositories (unique languages)
         let totalSkills = 0;
-        if (Array.isArray(skills)) {
-            skills.forEach(s => {
-                if (s.items && Array.isArray(s.items)) totalSkills += s.items.length;
+        if (github && github.repositories && !github.isNotConnected) {
+            const langs = new Set();
+            github.repositories.forEach(r => {
+                if (r.language) langs.add(r.language);
             });
+            totalSkills = langs.size;
         }
         document.getElementById('dash-skills-count').innerText = totalSkills;
         
@@ -148,6 +152,20 @@ export async function initDashboard() {
             const offset = circumference - (completion / 100) * circumference;
             circle.style.strokeDashoffset = offset;
         }
+
+        // Empty State: Connect GitHub
+        const bottomSection = document.getElementById('dash-bottom-section');
+        if (github.isNotConnected && bottomSection) {
+            bottomSection.classList.remove('grid', 'grid-cols-1', 'lg:grid-cols-3');
+            bottomSection.innerHTML = ConnectGithubUI();
+            initConnectGithub(async () => {
+                // Refresh dashboard automatically on success
+                await initDashboard();
+            });
+            return;
+        }
+        // If connected, restore layout in case it was removed
+        if (bottomSection) bottomSection.classList.add('grid', 'grid-cols-1', 'lg:grid-cols-3');
 
         // Recent Activity
         const activityContainer = document.getElementById('dash-recent-activity');
