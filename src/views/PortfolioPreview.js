@@ -5,6 +5,7 @@ import { generateTemplate } from '../components/TemplateEngine.js';
 
 let currentPaletteIdx = 0;
 let currentFontIdx = 0;
+let currentLayoutIdx = 0;
 
 export function PortfolioPreview() {
   return `
@@ -114,7 +115,7 @@ export async function initPreview() {
                 projects: displayProjects,
                 githubData: github,
                 skills: skills
-            }, currentPaletteIdx, currentFontIdx);
+            }, currentPaletteIdx, currentFontIdx, currentLayoutIdx);
             
             previewContainer.innerHTML = templateHtml;
         };
@@ -130,12 +131,17 @@ export async function initPreview() {
             btnNewLook.parentNode.replaceChild(newBtn, btnNewLook);
             
             newBtn.addEventListener('click', () => {
-                // Randomize palette and font
+                // Randomize palette, font, and layout
                 const oldPalette = currentPaletteIdx;
                 while (currentPaletteIdx === oldPalette) {
-                    currentPaletteIdx = Math.floor(Math.random() * 5); // 5 palettes
+                    currentPaletteIdx = Math.floor(Math.random() * 6); // 6 palettes (3 dark, 3 light)
                 }
                 currentFontIdx = Math.floor(Math.random() * 3); // 3 fonts
+                
+                const oldLayout = currentLayoutIdx;
+                while (currentLayoutIdx === oldLayout) {
+                    currentLayoutIdx = Math.floor(Math.random() * 3); // 3 layouts
+                }
                 renderTemplate();
             });
         }

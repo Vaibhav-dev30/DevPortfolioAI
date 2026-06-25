@@ -54,6 +54,17 @@ export function Settings() {
                     </div>
                 </div>
 
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col gap-2">
+                        <label class="font-label-md text-xs font-bold text-on-surface uppercase tracking-wider">Email (For Contact)</label>
+                        <input id="prof-email" type="email" class="w-full bg-surface border border-outline-variant/60 rounded-xl px-4 py-2.5 font-body-md text-sm text-on-surface focus:outline-none focus:border-primary transition-all shadow-sm" placeholder="hello@example.com" />
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label class="font-label-md text-xs font-bold text-on-surface uppercase tracking-wider">LinkedIn URL</label>
+                        <input id="prof-linkedin" type="text" class="w-full bg-surface border border-outline-variant/60 rounded-xl px-4 py-2.5 font-body-md text-sm text-on-surface focus:outline-none focus:border-primary transition-all shadow-sm" placeholder="https://linkedin.com/in/username" />
+                    </div>
+                </div>
+
                 <div class="flex flex-col gap-2">
                     <label class="font-label-md text-xs font-bold text-on-surface uppercase tracking-wider">Bio</label>
                     <textarea id="prof-bio" rows="3" class="w-full bg-surface border border-outline-variant/60 rounded-xl px-4 py-2.5 font-body-md text-sm text-on-surface focus:outline-none focus:border-primary transition-all shadow-sm" placeholder="Building digital products..."></textarea>
@@ -100,6 +111,8 @@ export async function initSettings() {
             document.getElementById('prof-github').value = user.github_username || '';
             document.getElementById('prof-location').value = user.location || '';
             document.getElementById('prof-bio').value = user.bio || '';
+            document.getElementById('prof-email').value = user.email || '';
+            document.getElementById('prof-linkedin').value = user.linkedin_url || '';
         }
         
         // Handle Form Submission
@@ -115,16 +128,18 @@ export async function initSettings() {
             saveBtn.innerHTML = 'Saving...';
             saveBtn.disabled = true;
 
-            const profileData = {
-                name: document.getElementById('prof-name').value,
-                role: document.getElementById('prof-role').value,
-                github_username: document.getElementById('prof-github').value,
-                location: document.getElementById('prof-location').value,
-                bio: document.getElementById('prof-bio').value
+            const newProfile = {
+                name: document.getElementById('prof-name').value.trim(),
+                role: document.getElementById('prof-role').value.trim(),
+                github_username: document.getElementById('prof-github').value.trim(),
+                location: document.getElementById('prof-location').value.trim(),
+                bio: document.getElementById('prof-bio').value.trim(),
+                email: document.getElementById('prof-email').value.trim(),
+                linkedin_url: document.getElementById('prof-linkedin').value.trim()
             };
 
             try {
-                await api.updateUser(profileData);
+                await api.updateUser(newProfile);
                 successBox.innerText = "Profile updated successfully!";
                 successBox.classList.remove('hidden');
             } catch (err) {
