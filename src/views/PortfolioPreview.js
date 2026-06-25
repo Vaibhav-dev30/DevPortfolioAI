@@ -2,6 +2,7 @@ import { TopNav } from '../components/TopNav.js';
 import { api } from '../services/api.js';
 import { ConnectGithubUI, initConnectGithub } from '../components/ConnectGithub.js';
 import { generateTemplate } from '../components/TemplateEngine.js';
+import { initDeployModal } from '../components/DeployModal.js';
 
 let currentPaletteIdx = 0;
 let currentFontIdx = 0;
@@ -24,7 +25,7 @@ export function PortfolioPreview() {
           </div>
           
           <div class="flex items-center gap-md relative z-10 min-w-max">
-              <button class="bg-primary hover:bg-primary/90 text-on-primary font-label-md text-label-md px-4 py-2 rounded-lg transition-colors shadow-lg shadow-primary/20 flex items-center gap-2 pulse-amber">
+              <button id="btn-deploy" class="bg-primary hover:bg-primary/90 text-on-primary font-label-md text-label-md px-4 py-2 rounded-lg transition-colors shadow-lg shadow-primary/20 flex items-center gap-2 pulse-amber">
                  <span class="material-symbols-outlined text-[18px]">rocket_launch</span> Deploy
               </button>
           </div>
@@ -143,6 +144,16 @@ export async function initPreview() {
                     currentLayoutIdx = Math.floor(Math.random() * 3); // 3 layouts
                 }
                 renderTemplate();
+            });
+        }
+
+        // Setup Deploy Modal
+        initDeployModal(() => previewContainer.innerHTML);
+        
+        const deployBtn = document.getElementById('btn-deploy');
+        if (deployBtn) {
+            deployBtn.addEventListener('click', () => {
+                window.openDeployModal();
             });
         }
 
