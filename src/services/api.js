@@ -101,7 +101,7 @@ export const api = {
       if (!user) throw new Error("Not logged in");
       const { data, error } = await supabase.from('projects').select('*').eq('user_id', user.id);
       if (error) throw error;
-      return data && data.length > 0 ? data : mockProjects;
+      return data || [];
     } catch (err) {
       console.warn("Using mock projects", err.message);
       await delay(500);
@@ -214,6 +214,13 @@ export const api = {
        const { error } = await supabase.from('profiles').insert({ id: user.id, ...profileData });
        if (error) throw error;
     }
+    return true;
+  },
+  createProject: async (projectData) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Not logged in");
+    const { error } = await supabase.from('projects').insert({ user_id: user.id, ...projectData });
+    if (error) throw error;
     return true;
   },
   logout: async () => {
