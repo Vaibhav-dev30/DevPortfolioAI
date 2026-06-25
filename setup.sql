@@ -6,7 +6,10 @@ CREATE TABLE public.profiles (
   avatar text,
   bio text,
   location text,
-  github_username text
+  github_username text,
+  email text,
+  linkedin_url text,
+  updated_at timestamp with time zone default timezone('utc'::text, now())
 );
 
 -- Enable RLS for profiles
