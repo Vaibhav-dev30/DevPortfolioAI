@@ -124,7 +124,7 @@ export const api = {
   getGithubData: async () => {
     try {
       // Fetch dynamic username from profile
-      let username = 'Vaibhav-dev30'; // fallback
+      let username = null;
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
@@ -134,6 +134,10 @@ export const api = {
            }
         }
       } catch(e) { /* ignore */ }
+
+      if (!username) {
+          return { isNotConnected: true };
+      }
 
       const [userRes, reposRes, eventsRes] = await Promise.all([
         fetch(`https://api.github.com/users/${username}`),
