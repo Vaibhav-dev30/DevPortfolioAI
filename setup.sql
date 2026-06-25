@@ -5,7 +5,8 @@ CREATE TABLE public.profiles (
   role text,
   avatar text,
   bio text,
-  location text
+  location text,
+  github_username text
 );
 
 -- Enable RLS for profiles
