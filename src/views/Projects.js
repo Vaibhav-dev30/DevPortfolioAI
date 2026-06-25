@@ -37,10 +37,16 @@ export function Projects() {
                   <button class="px-4 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant font-label-md text-label-md hover:bg-surface-variant transition-colors shadow-sm">Mobile</button>
                   <button class="px-4 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant font-label-md text-label-md hover:bg-surface-variant transition-colors shadow-sm">Open Source</button>
               </div>
-              <button id="btn-open-modal" class="flex items-center gap-sm bg-primary hover:bg-primary/90 text-on-primary font-label-md text-label-md px-4 py-2 rounded-lg transition-colors shadow-lg shadow-primary/20 pulse-amber">
-                  <span class="material-symbols-outlined text-sm">add</span>
-                  Add Project
-              </button>
+              <div class="flex items-center gap-3">
+                  <button id="btn-auto-import" class="flex items-center gap-sm bg-surface-container-lowest border border-outline-variant hover:border-primary text-on-surface hover:text-primary font-label-md text-label-md px-4 py-2 rounded-lg transition-colors shadow-sm">
+                      <span class="material-symbols-outlined text-sm text-secondary">auto_awesome</span>
+                      Auto-Import from GitHub
+                  </button>
+                  <button id="btn-open-modal" class="flex items-center gap-sm bg-primary hover:bg-primary/90 text-on-primary font-label-md text-label-md px-4 py-2 rounded-lg transition-colors shadow-lg shadow-primary/20 pulse-amber">
+                      <span class="material-symbols-outlined text-sm">add</span>
+                      Add Project
+                  </button>
+              </div>
           </div>
           
           <!-- Projects Grid -->
@@ -238,6 +244,49 @@ export async function initProjects() {
             } finally {
                 btnSubmit.innerHTML = 'Create Project';
                 btnSubmit.disabled = false;
+            }
+        });
+    }
+
+    const btnAutoImport = document.getElementById('btn-auto-import');
+    if (btnAutoImport) {
+        btnAutoImport.addEventListener('click', async () => {
+            const originalHtml = btnAutoImport.innerHTML;
+            btnAutoImport.innerHTML = '<span class="material-symbols-outlined text-sm text-secondary animate-spin">sync</span> Extracting...';
+            btnAutoImport.disabled = true;
+
+            try {
+                const githubData = await api.getGithubData();
+                if (githubData && githubData.isNotConnected) {
+                    alert('Please connect your GitHub account first via the Dashboard or Skills tab!');
+                    return;
+                }
+                
+                const bestProjects = api.extractBestProjects(githubData);
+                if (bestProjects.length === 0) {
+                    alert('No suitable repositories found to import.');
+                    return;
+                }
+
+                // Import each
+                let imported = 0;
+                for (const proj of bestProjects) {
+                    try {
+                        await api.createProject(proj);
+                        imported++;
+                    } catch(e) {
+                        console.error('Failed to import project:', proj.title, e);
+                    }
+                }
+                
+                alert(`Successfully imported ${imported} projects from GitHub!`);
+                await renderGrid();
+            } catch (err) {
+                console.error(err);
+                alert('Failed to auto-import from GitHub.');
+            } finally {
+                btnAutoImport.innerHTML = originalHtml;
+                btnAutoImport.disabled = false;
             }
         });
     }

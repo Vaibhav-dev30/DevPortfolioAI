@@ -93,8 +93,13 @@ export async function initPreview() {
         const avatar = user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&size=200`;
         const location = user?.location || 'Planet Earth';
 
-        // Filter projects (max 4 for the mini preview)
-        const displayProjects = projects && projects.length > 0 ? projects.slice(0, 4) : [];
+        // Filter projects
+        let displayProjects = projects && projects.length > 0 ? projects : [];
+
+        // Smart Fallback: Auto-Extract from GitHub if no manual projects exist
+        if (displayProjects.length === 0 && github && !github.isNotConnected) {
+            displayProjects = api.extractBestProjects(github);
+        }
 
         // Simple Tailwind based mini-portfolio injected directly into the container
         previewContainer.innerHTML = `
